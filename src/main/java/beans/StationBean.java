@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class StationBean extends CsvBean {
+public class StationBean {
 
     @CsvBindByPosition(position = 0)
     private String id;

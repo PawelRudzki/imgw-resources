@@ -1,16 +1,17 @@
 package dao;
 
-import beans.CsvBean;
 import beans.StationBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 
 public class StationDao {
 
-
-    public static List<StationBean> stationBuilder(String uri) throws Exception {
+    public List<StationBean> stationBuilder(String uri) throws Exception {
 
         Reader reader = new BufferedReader(
                 new InputStreamReader(
@@ -22,5 +23,4 @@ public class StationDao {
                 .build().parse();
         return beans;
     }
-
 }
