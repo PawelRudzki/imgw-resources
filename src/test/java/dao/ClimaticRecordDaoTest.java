@@ -20,6 +20,23 @@ public class ClimaticRecordDaoTest {
 
 
         //then
-        assertEquals(th.txtToString("climatic-records.txt"), result + "\n");
+        assertEquals(th.txtToString("txt/climatic-records.txt"), result + "\n");
     }
+
+    @Test
+    public void testsDataReadedToClimaticRecordBeansFromZip() throws Exception {
+
+        //given
+        TestHelper th = new TestHelper();
+        ClimaticRecordDao crd = new ClimaticRecordDao();
+
+
+        //when
+        String result = crd.climaticRecordBuilder("csv/k_d_01_2001.csv").toString();
+
+
+        //then
+        assertEquals(th.txtToString("txt/climatic-records.txt"), result + "\n");
+    }
+
 }
