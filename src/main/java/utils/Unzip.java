@@ -9,15 +9,13 @@ import java.util.zip.ZipInputStream;
 
 public class Unzip {
 
-    public File unzip(String zipInputFile, String outputDirectory) throws Exception {
+    public File unzip(InputStream is, String outputDirectory) throws Exception {
 
         byte[] buffer = new byte[2048];
 
         Path outDir = Paths.get(outputDirectory);
-        String zipFileName = zipInputFile;
 
-        try (FileInputStream fis = new FileInputStream(zipFileName);
-             BufferedInputStream bis = new BufferedInputStream(fis);
+        try (BufferedInputStream bis = new BufferedInputStream(is);
              ZipInputStream stream = new ZipInputStream(bis)) {
 
             ZipEntry entry;
