@@ -2,6 +2,8 @@ package dao;
 
 import org.junit.Test;
 
+import java.io.FileInputStream;
+
 import static org.junit.Assert.assertEquals;
 
 
@@ -16,7 +18,7 @@ public class ClimaticRecordDaoTest {
 
 
         //when
-        String result = crd.climaticRecordBuilder("csv/k_d_01_2001.csv").toString();
+        String result = crd.climaticRecordBuilder(new FileInputStream("csv/k_d_01_2001.csv")).toString();
 
 
         //then
@@ -32,7 +34,7 @@ public class ClimaticRecordDaoTest {
 
 
         //when
-        String result = crd.climaticRecordBuilder("csv/k_d_01_2001.csv").toString();
+        String result = crd.climaticRecordBuilder(new FileInputStream("csv/k_d_01_2001.csv")).toString();
 
 
         //then

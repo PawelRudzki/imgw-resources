@@ -2,6 +2,8 @@ package dao;
 
 import org.junit.Test;
 
+import java.io.FileInputStream;
+
 import static org.junit.Assert.assertEquals;
 
 public class StationDaoTest {
@@ -15,7 +17,7 @@ public class StationDaoTest {
 
 
         //when
-        String result = sd.stationBuilder("csv/wykaz_stacji.csv").toString();
+        String result = sd.stationBuilder(new FileInputStream("csv/wykaz_stacji.csv")).toString();
 
 
         //then
