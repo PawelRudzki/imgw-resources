@@ -21,7 +21,6 @@ public class StationDaoTest {
         //then
         assertEquals( th.txtToString("stations.txt"), result+"\n");
 
-
     }
 
 }
