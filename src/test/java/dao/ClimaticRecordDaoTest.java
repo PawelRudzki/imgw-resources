@@ -1,10 +1,13 @@
 package dao;
 
 import beans.ClimaticRecordBean;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+import utils.Unzip;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -22,47 +25,14 @@ public class ClimaticRecordDaoTest {
 
 
         //when
-        List<ClimaticRecordBean> resultList = crd.climaticRecordBuilder(new FileInputStream("csv/k_d_t_01_2019.csv"));
+        InputStream is = new FileInputStream("csv/k_d_t_01_2019.csv");
+        List<ClimaticRecordBean> resultList = crd.climaticRecordBuilder(is);
+        is.close();
 
         String resultString = resultList.get(resultList.size()-1).toString();
 
         //then
         assertEquals(th.readLineByLineJava8("txt/climatic-records-test.txt"), resultString+"\n");
+
     }
-
-    @Test
-    public void testsDataReadedToClimaticRecordBeansFromZip() throws Exception {
-
-        //given
-        TestHelper th = new TestHelper();
-        ClimaticRecordDao crd = new ClimaticRecordDao();
-
-
-        //when
-        List<ClimaticRecordBean> resultList = crd.pullClimaticRecordsFromZip(new FileInputStream("zip/2019_01_k.zip"));
-
-        String resultString = resultList.get(resultList.size()-1).toString();
-
-        //then
-        assertEquals(th.readLineByLineJava8("txt/climatic-records-test.txt"), resultString+"\n");
-    }
-
-    @Test
-    public void testsDataReadedToClimaticRecordBeansFromImgwOnlineZip() throws Exception {
-
-        //given
-        TestHelper th = new TestHelper();
-        ClimaticRecordDao crd = new ClimaticRecordDao();
-
-
-        //when
-        List<ClimaticRecordBean> resultList = crd.pullClimaticRecordsFromZip(new URL("https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/2019/2019_01_k.zip").openStream());
-
-        String resultString = resultList.get(resultList.size()-1).toString();
-
-
-        //then
-        assertEquals(th.txtToString("txt/climatic-records-test.txt"), resultString+"\n");
-    }
-
 }

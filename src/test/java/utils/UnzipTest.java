@@ -1,5 +1,6 @@
 package utils;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
@@ -12,39 +13,49 @@ import static org.junit.Assert.*;
 public class UnzipTest {
 
     @Test
-    public void testsUnzippingWithOneFileArchive() throws Exception {
+    public void testsUnzipping() throws Exception {
 
         //when
         Unzip unzipper = new Unzip();
 
         //given
-        File unzippedFile = unzipper.unzip(
-                new FileInputStream("zip/one-file-archive.zip"),
+        unzipper.unzip(
+                new FileInputStream("zip/2019_01_k.zip"),
                 "output/");
 
-        boolean result = unzippedFile.exists();
+        File unzippedFile1 = new File("output/k_d_t_01_2019.csv");
+        File unzippedFile2 = new File("output/k_d_01_2019.csv");
+
+        boolean result1 = unzippedFile1.exists();
+        boolean result2 = unzippedFile1.exists();
 
         //then
-        assertTrue(result);
-        unzippedFile.delete();
+        assertTrue(result1 && result2);
+        FileUtils.cleanDirectory(new File("output/"));
+
     }
 
     @Test
-    public void testsUnzippingWithOneFileArchiveOnline() throws Exception {
+    public void testsUnzippingFromImgwSite() throws Exception {
 
         //when
         Unzip unzipper = new Unzip();
 
         //given
-        File unzippedFile = unzipper.unzip(
+
+        unzipper.unzip(
                 new URL("https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/2001/2001_01_k.zip").openStream(),
                 "output/");
 
-        boolean result = unzippedFile.exists();
+        File unzippedFile1 = new File("output/k_d_t_01_2001.csv");
+        File unzippedFile2 = new File("output/k_d_01_2001.csv");
+
+        boolean result1 = unzippedFile1.exists();
+        boolean result2 = unzippedFile1.exists();
 
         //then
-        assertTrue(result);
-        unzippedFile.delete();
+        assertTrue(result1 && result2);
+        FileUtils.cleanDirectory(new File("output/"));
     }
 
 }
