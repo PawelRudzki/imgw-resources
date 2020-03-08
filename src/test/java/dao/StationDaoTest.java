@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.FileInputStream;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -21,7 +22,9 @@ public class StationDaoTest {
 
 
         //when
-        String result = sd.stationBuilder(new FileInputStream("csv/wykaz_stacji.csv")).toString();
+        InputStream is = new FileInputStream("csv/wykaz_stacji.csv");
+        String result = sd.stationBuilder(is).toString();
+        is.close();
 
 
         //then
@@ -40,9 +43,12 @@ public class StationDaoTest {
 
 
         //when
-        List<StationBean> resultList = sd.stationBuilder(new URL(
+        InputStream is = new URL(
                 "https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/wykaz_stacji.csv")
-                .openStream());
+                .openStream();
+
+        List<StationBean> resultList = sd.stationBuilder(is);
+        is.close();
 
         //Some differences in reading .csv files from disk and directly from url require adding "" to station names.
 

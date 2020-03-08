@@ -28,14 +28,16 @@ public class UnzipAndReadDataTest {
 
         //when
 
-        unzipper.unzip(new FileInputStream("zip/2019_01_k.zip"), "output/");
+        InputStream fis = new FileInputStream("zip/2019_01_k.zip");
+        unzipper.unzip(fis, "output/");
+        fis.close();
 
 
-        InputStream is = new FileInputStream("output/k_d_t_01_2019.csv");
-        List<ClimaticRecordBean> resultList = crd.climaticRecordBuilder(is);
+        fis = new FileInputStream("output/k_d_t_01_2019.csv");
+        List<ClimaticRecordBean> resultList = crd.climaticRecordBuilder(fis);
 
         //if not closed won't be able to delete unzipped file at the end of the test
-        is.close();
+        fis.close();
 
 
         String resultString = resultList.get(resultList.size()-1).toString();
@@ -60,18 +62,21 @@ public class UnzipAndReadDataTest {
 
         //when
 
-        unzipper.unzip(new URL(
-                        "https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/2019/2019_01_k.zip").openStream(),
-                "output/");
+        InputStream is = new URL(
+                "https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/2019/2019_01_k.zip").openStream();
+
+        unzipper.unzip(is, "output/");
 
 
-        InputStream is = new FileInputStream("output/k_d_t_01_2019.csv");
-        List<ClimaticRecordBean> resultList = crd.climaticRecordBuilder(is);
-        is.close();
+        InputStream fis = new FileInputStream("output/k_d_t_01_2019.csv");
+        List<ClimaticRecordBean> resultList = crd.climaticRecordBuilder(fis);
+        fis.close();
 
         String resultString = resultList.get(resultList.size()-1).toString();
 
         //then
         assertEquals(th.readLineByLineJava8("txt/climatic-records-test.txt"), resultString+"\n");
+
+        FileUtils.cleanDirectory(new File("output/"));
     }
 }

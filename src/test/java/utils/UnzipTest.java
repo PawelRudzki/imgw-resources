@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 
 import static org.junit.Assert.*;
@@ -19,9 +20,10 @@ public class UnzipTest {
         Unzip unzipper = new Unzip();
 
         //given
-        unzipper.unzip(
-                new FileInputStream("zip/2019_01_k.zip"),
-                "output/");
+
+        InputStream is =  new FileInputStream("zip/2019_01_k.zip");
+        unzipper.unzip(is, "output/");
+        is.close();
 
         File unzippedFile1 = new File("output/k_d_t_01_2019.csv");
         File unzippedFile2 = new File("output/k_d_01_2019.csv");
@@ -43,9 +45,9 @@ public class UnzipTest {
 
         //given
 
-        unzipper.unzip(
-                new URL("https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/2001/2001_01_k.zip").openStream(),
-                "output/");
+        InputStream is = new URL("https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/2001/2001_01_k.zip").openStream();
+        unzipper.unzip(is, "output/");
+        is.close();
 
         File unzippedFile1 = new File("output/k_d_t_01_2001.csv");
         File unzippedFile2 = new File("output/k_d_01_2001.csv");
