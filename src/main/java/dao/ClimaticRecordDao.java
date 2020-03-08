@@ -2,9 +2,25 @@ package dao;
 
 import beans.ClimaticRecordBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class ClimaticRecordDao {
 
@@ -22,41 +38,5 @@ public class ClimaticRecordDao {
                 .build().parse();
         return beans;
     }
-
-//    public List<ClimaticRecordBean> pullClimaticRecordsFromZip(InputStream is) throws Exception {
-//
-//        Unzip unzipper = new Unzip();
-//
-//        return climaticRecordBuilder(new FileInputStream(
-//                unzipper.unzip(is, "output/")));
-//    }
-//
-//
-//    //test with bytearrays instead of InputStreams
-//
-//    public List<ClimaticRecordBean> pullClimaticRecordsFromImgwSiteAsBytes(String stationsZip) throws Exception {
-//        System.setProperty("file.encoding", ENCODING);
-//
-//        Unzip unzipper = new Unzip();
-//
-//        InputStream fileInputStream = new FileInputStream(unzipper.unzip(new URL(stationsZip).openStream(), "output/"));
-//        byte[] byteStream = fileInputStream.readAllBytes();
-//
-//        return climaticRecordBuilderFromByteArray(byteStream);
-//    }
-
-//
-//    public List<ClimaticRecordBean> climaticRecordBuilderFromByteArray(byte[] ba) throws Exception {
-//        System.setProperty("file.encoding", ENCODING);
-//
-//        Reader reader = new BufferedReader(
-//                new InputStreamReader(
-//                        new ByteArrayInputStream(ba), ENCODING));
-//
-//        List<ClimaticRecordBean> beans = new CsvToBeanBuilder(reader)
-//                .withType(ClimaticRecordBean.class)
-//                .withIgnoreQuotations(true)
-//                .build().parse();
-//        return beans;
-//    }
 }
+

@@ -33,6 +33,8 @@ public class ClimaticRecordDaoTest {
 
         //then
         assertEquals(th.readLineByLineJava8("txt/climatic-records-test.txt"), resultString+"\n");
-
     }
+
+
+
 }
