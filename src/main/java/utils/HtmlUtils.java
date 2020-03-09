@@ -4,31 +4,49 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class HtmlUtils {
 
     public List<String> pullDirectoryContents(String url) {
         Document doc;
-        String title = "";
         Elements dirs = null;
         try {
             doc = Jsoup.connect(url).get();
-            title = doc.title();
             dirs = doc.getElementsByTag("a");
-            List textNodes = dirs.textNodes();
-            textNodes = textNodes.subList(5, textNodes.size() - 1);
-            return textNodes;
+            List textContents = dirs.eachText();
+
+            //cutting out title records
+            textContents = textContents.subList(5, textContents.size() - 1);
+
+
+            List<String> stringList = new LinkedList<>();
+            for (int i = 0; i < textContents.size(); i++) {
+                stringList.add((String) textContents.get(i));
+            }
+            return stringList;
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
+
+
+    public Map pullFilesMap(String url) {
+
+        Map<String, List<String>> filesMap = new HashMap<>();
+
+        pullDirectoryContents(url).stream()
+                .filter(a -> "/".equals(a.substring(a.length() - 1)))
+                .forEach(a -> filesMap.put(a, pullDirectoryContents(url + a)));
+
+        return filesMap;
+    }
 }
+
