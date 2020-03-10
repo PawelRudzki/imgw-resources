@@ -42,7 +42,5 @@ public class HtmlUtilsTest {
 
         //then
         assertEquals(th.readLineByLineJava8("txt/files-map.txt"), result.get("2008/") + "\n");
-
-
     }
 }

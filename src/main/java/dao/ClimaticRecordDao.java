@@ -25,12 +25,11 @@ public class ClimaticRecordDao {
 
     private final String ENCODING = "windows-1250";
 
-    public List<ClimaticRecordBean> climaticRecordBuilder(InputStream is) throws Exception {
+    public List<ClimaticRecordBean> toBeans(InputStream is) throws Exception {
 
         Reader reader = new BufferedReader(
                 new InputStreamReader(
                         is, ENCODING));
-
         List<ClimaticRecordBean> beans = new CsvToBeanBuilder(reader)
                 .withType(ClimaticRecordBean.class)
                 .withIgnoreQuotations(true)
@@ -48,6 +47,8 @@ public class ClimaticRecordDao {
         filesMap.forEach((key, value) -> {
             value.forEach(file -> {
                 InputStream is = null;
+
+                //rule out files starting with "k_d_t" - this data doesn't fit to ClimaticRecordBeans
                 try {
                     is = new URL("https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/" + key + file).openStream();
                     unzip.unzip(is, "output/");
@@ -63,21 +64,20 @@ public class ClimaticRecordDao {
 
         List<ClimaticRecordBean> crbList = new LinkedList<>();
         try (Stream<Path> walk = Files.walk(Paths.get("output/"))) {
-            walk.forEach(a -> {
-                InputStream is = null;
-                try {
-                    is = new FileInputStream(a.toFile());
-                    Reader reader = new BufferedReader(
-                            new InputStreamReader(
-                                    is, ENCODING));
-                    crbList.addAll(climaticRecordBuilder(is));
-                    is.close();
-                    Files.delete(a);
+            walk
+                    .filter(b -> b.toString().length()>11 && b.toString().charAt(11)!='t')
+                    .forEach(a -> {
+                        InputStream is = null;
+                        try {
+                            is = new FileInputStream(a.toFile());
+                            crbList.addAll(toBeans(is));
+                            is.close();
+                            Files.delete(a);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
             return crbList;
         } catch (IOException e) {
             e.printStackTrace();

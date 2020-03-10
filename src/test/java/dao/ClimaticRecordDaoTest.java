@@ -26,7 +26,7 @@ public class ClimaticRecordDaoTest {
 
         //when
         InputStream is = new FileInputStream("csv/k_d_t_01_2019.csv");
-        List<ClimaticRecordBean> resultList = crd.climaticRecordBuilder(is);
+        List<ClimaticRecordBean> resultList = crd.toBeans(is);
         is.close();
 
         String resultString = resultList.get(resultList.size()-1).toString();
@@ -72,6 +72,8 @@ public class ClimaticRecordDaoTest {
 
         //then
         assertEquals(th.readLineByLineJava8("txt/read-climatic-records-test.txt"), crbList.get(crbList.size()-1)+"\n");
+        FileUtils.cleanDirectory(new File("output/"));
+
     }
 
 
