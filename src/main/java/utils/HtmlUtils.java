@@ -5,10 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HtmlUtils {
 
@@ -21,7 +18,7 @@ public class HtmlUtils {
             List textContents = dirs.eachText();
 
             //cutting out title records
-            textContents = textContents.subList(5, textContents.size() - 1);
+            textContents = textContents.subList(5, textContents.size());
 
 
             List<String> stringList = new LinkedList<>();
@@ -40,7 +37,7 @@ public class HtmlUtils {
 
     public Map pullFilesMap(String url) {
 
-        Map<String, List<String>> filesMap = new HashMap<>();
+        Map<String, List<String>> filesMap = new TreeMap<>();
 
         pullDirectoryContents(url).stream()
                 .filter(a -> "/".equals(a.substring(a.length() - 1)))
