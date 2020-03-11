@@ -23,12 +23,15 @@ public class StationDaoTest {
 
         //when
         InputStream is = new FileInputStream("csv/wykaz_stacji.csv");
-        String result = sd.readFromCSV(is).toString();
+
+        Set<StationBean> resultSet = sd.readFromCSV(is);
         is.close();
+
+        String result = resultSet.toString();
 
 
         //then
-        assertEquals( th.txtToString("txt/stations.txt"), result+"\n");
+        assertEquals( th.txtToString("txt/stations-test-from-disc.txt"), result+"\n");
 
     }
 
@@ -47,20 +50,18 @@ public class StationDaoTest {
                 "https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/wykaz_stacji.csv")
                 .openStream();
 
-        Set<StationBean> resultList = sd.readFromCSV(is);
+        Set<StationBean> resultSet = sd.readFromCSV(is);
         is.close();
 
-        //Some differences in reading .csv files from disk and directly from url require adding "" to station names.
-
-        for(StationBean bean : resultList){
+        //Some differences in reading .csv files from disk and directly from url require explicit adding "" to station names.
+        //It also affects beans order in resultSet so there are used different reference txt files for tests
+        for(StationBean bean : resultSet){
             bean.setName("\""+bean.getName()+"\"");
         }
 
-        String result = resultList.toString();
+        String result = resultSet.toString();
 
         //then
-        assertEquals( th.txtToString("txt/stations.txt"), result+"\n");
-
+        assertEquals( th.txtToString("txt/stations-test-from-url.txt"), result+"\n");
     }
-
 }
