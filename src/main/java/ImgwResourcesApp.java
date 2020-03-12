@@ -1,3 +1,4 @@
+import dao.ClimaticRecordDao;
 import dao.StationDao;
 
 import java.sql.Connection;
@@ -11,15 +12,14 @@ public class ImgwResourcesApp {
             Connection con = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/imgw_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true", "root", "Mandok01");
 
-            StationDao sd = new StationDao();
+            ClimaticRecordDao crd = new ClimaticRecordDao();
 
-            System.out.println(sd.readToDatabase(con));
+            System.out.println(crd.readToDatabase(con));
 
             con.close();
         } catch (Exception e) {
             System.out.println(e);
         }
-
     }
 }
 

@@ -4,6 +4,7 @@ package utils;
 import dao.TestHelper;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 public class HtmlUtilsTest {
 
     @Test
-    public void testsPullDirectoryContents() {
+    public void testsPullDirectoryContents() throws IOException {
 
         //given
         TestHelper th = new TestHelper();
@@ -29,7 +30,7 @@ public class HtmlUtilsTest {
     }
 
     @Test
-    public void testsPullFilesMap() {
+    public void testsPullFilesMap() throws IOException {
 
         //given
         TestHelper th = new TestHelper();

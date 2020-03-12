@@ -6,11 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+import java.util.Objects;
+
 @Getter
 @Setter
 @ToString
 
-public class ClimaticRecordBean {
+public class ClimaticRecordBean implements Comparable<ClimaticRecordBean> {
 
     @CsvBindByPosition(position = 0)
     private String id;
@@ -64,7 +67,31 @@ public class ClimaticRecordBean {
     @CsvBindByPosition(position = 16)
     private String snowLayerHeight;
 
+    @CsvBindByPosition(position = 17)
+    private String snowLayerHeightStatus;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClimaticRecordBean bean = (ClimaticRecordBean) o;
+        return getId().equals(bean.getId()) &&
+                getYear().equals(bean.getYear()) &&
+                getMonth().equals(bean.getMonth()) &&
+                getDay().equals(bean.getDay());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getYear(), getMonth(), getDay());
+    }
+
+    @Override
+    public int compareTo(ClimaticRecordBean o) {
+        String thisDate = this.getId()+this.getDay()+this.getMonth()+this.getYear();
+        String oDate = o.getId()+o.getDay()+o.getMonth()+o.getYear();
+        return thisDate.compareTo(oDate);
+    }
 //    Kod stacji                              9
 //    Nazwa stacji                           30
 //    Rok                                     4
