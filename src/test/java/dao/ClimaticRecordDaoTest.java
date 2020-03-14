@@ -3,18 +3,15 @@ package dao;
 import beans.ClimaticRecordBean;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import utils.Unzip;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -75,7 +72,7 @@ public class ClimaticRecordDaoTest {
 
         //when
         InputStream is = new FileInputStream("csv/k_d_t_01_2019.csv");
-        List<ClimaticRecordBean> resultList = crd.toBeans(is);
+        List<ClimaticRecordBean> resultList = crd.readFromCSV(is);
         is.close();
 
         String resultString = resultList.get(resultList.size() - 1).toString();

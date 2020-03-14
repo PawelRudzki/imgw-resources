@@ -34,7 +34,7 @@ public class UnzipAndReadDataTest {
 
 
         fis = new FileInputStream("output/k_d_t_01_2019.csv");
-        List<ClimaticRecordBean> resultList = crd.toBeans(fis);
+        List<ClimaticRecordBean> resultList = crd.readFromCSV(fis);
 
         //if not closed won't be able to delete unzipped file at the end of the test
         fis.close();
@@ -69,7 +69,7 @@ public class UnzipAndReadDataTest {
 
 
         InputStream fis = new FileInputStream("output/k_d_t_01_2019.csv");
-        List<ClimaticRecordBean> resultList = crd.toBeans(fis);
+        List<ClimaticRecordBean> resultList = crd.readFromCSV(fis);
         fis.close();
 
         String resultString = resultList.get(resultList.size()-1).toString();

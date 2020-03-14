@@ -1,7 +1,6 @@
 package dao;
 
 import beans.ClimaticRecordBean;
-import beans.StationBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import utils.HtmlUtils;
 import utils.Unzip;
@@ -28,7 +27,7 @@ public class ClimaticRecordDao {
 
     private final String ENCODING = "windows-1250";
 
-    public List<ClimaticRecordBean> toBeans(InputStream is) throws Exception {
+    public List<ClimaticRecordBean> readFromCSV(InputStream is) throws Exception {
 
         Reader reader = new BufferedReader(
                 new InputStreamReader(
@@ -45,13 +44,12 @@ public class ClimaticRecordDao {
         HtmlUtils htmlUtils = new HtmlUtils();
         Unzip unzip = new Unzip();
         List<ClimaticRecordBean> pathsList = new LinkedList();
-        TreeMap<String, LinkedList<String>> filesMap = (TreeMap) htmlUtils.pullFilesMap("https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/");
+        TreeMap<String, LinkedList<String>> filesMap = (TreeMap<String, LinkedList<String>>) htmlUtils.pullFilesMap("https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/");
 
         filesMap.forEach((key, value) -> {
             value.forEach(file -> {
                 InputStream is = null;
 
-                //rule out files starting with "k_d_t" - this data doesn't fit to ClimaticRecordBeans
                 try {
                     is = new URL("https://dane.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/klimat/" + key + file).openStream();
                     unzip.unzip(is, "output/");
@@ -65,7 +63,7 @@ public class ClimaticRecordDao {
 
     public Set<ClimaticRecordBean> readData() {
 
-        Set<ClimaticRecordBean> crbList = new TreeSet<>();
+        Set<ClimaticRecordBean> crbSet = new TreeSet<>();
         try (Stream<Path> walk = Files.walk(Paths.get("output/"))) {
             walk
                     .filter(b -> b.toString().length()>11 && b.toString().charAt(11)!='t')
@@ -73,7 +71,7 @@ public class ClimaticRecordDao {
                         InputStream is = null;
                         try {
                             is = new FileInputStream(a.toFile());
-                            crbList.addAll(toBeans(is));
+                            crbSet.addAll(readFromCSV(is));
                             is.close();
                             Files.delete(a);
 
@@ -81,7 +79,7 @@ public class ClimaticRecordDao {
                             e.printStackTrace();
                         }
                     });
-            return crbList;
+            return crbSet;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,7 +95,7 @@ public class ClimaticRecordDao {
         Set<ClimaticRecordBean> stationBeans = crd.readData();
 
         for (ClimaticRecordBean record : stationBeans) {
-            String preparedQuery = "insert into `imgw_db`.`t_climatic_records` (station_id, station_name, year, month, day," +
+            String preparedQuery = "INSERT INTO `imgw_db`.`t_climatic_records` (station_id, station_name, year, month, day," +
                     " max_tmp, max_tmp_status, min_tmp, min_tmp_status, avg_tmp, avg_tmp_status, min_ground_tmp, min_ground_tmp_status," +
                     " total_precipitation, total_precipitation_status, precipitation_kind, snow_layer_height, snow_layer_height_status\n)"
                     + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

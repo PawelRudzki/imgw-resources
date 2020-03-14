@@ -5,8 +5,6 @@ import com.opencsv.bean.CsvBindByPosition;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -88,8 +86,8 @@ public class ClimaticRecordBean implements Comparable<ClimaticRecordBean> {
 
     @Override
     public int compareTo(ClimaticRecordBean o) {
-        String thisDate = this.getId()+this.getDay()+this.getMonth()+this.getYear();
-        String oDate = o.getId()+o.getDay()+o.getMonth()+o.getYear();
+        String thisDate = this.getId() + this.getDay() + this.getMonth() + this.getYear();
+        String oDate = o.getId() + o.getDay() + o.getMonth() + o.getYear();
         return thisDate.compareTo(oDate);
     }
 //    Kod stacji                              9
