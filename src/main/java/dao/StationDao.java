@@ -41,11 +41,12 @@ public class StationDao {
         Set<StationBean> stationBeans = sd.readFromCSV(is);
 
         for (StationBean station : stationBeans) {
-            String preparedQuery = "insert into `imgw_db`.`t_stations` (station_id, station_name)"
-                    + " values (?, ?)";
+            String preparedQuery = "insert into `imgw_db`.`t_stations` (station_id, station_name,short_station_id)"
+                    + " values (?, ?, ?)";
             PreparedStatement preparedStmt = con.prepareStatement(preparedQuery);
             preparedStmt.setString(1, station.getId());
             preparedStmt.setString(2, station.getName());
+            preparedStmt.setString(3, station.getShortStationId());
             preparedStmt.execute();
         }
 
@@ -66,6 +67,7 @@ public class StationDao {
         query = "   CREATE TABLE `imgw_db`.`t_stations` (\n" +
                 "  `station_id` VARCHAR(9) NOT NULL,\n" +
                 "  `station_name` VARCHAR(30) NOT NULL,\n" +
+                "  `short_station_id` VARCHAR(5) NOT NULL,\n" +
                 "            PRIMARY KEY (`station_id`),\n" +
                 "            UNIQUE INDEX `station_id_UNIQUE` (`station_id` ASC) VISIBLE)";
         stmt.executeUpdate(query);

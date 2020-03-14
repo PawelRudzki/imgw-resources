@@ -17,6 +17,9 @@ public class StationBean implements Comparable<StationBean>{
     @CsvBindByPosition(position = 1)
     private String name;
 
+    @CsvBindByPosition(position = 2)
+    private String shortStationId;
+
 
     @Override
     public boolean equals(Object o) {

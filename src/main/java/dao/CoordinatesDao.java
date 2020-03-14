@@ -65,7 +65,7 @@ public class CoordinatesDao {
 
         stmt = con.createStatement();
         query = "   CREATE TABLE `imgw_db`.`t_coordinates` (\n" +
-                "  `short_station_id` VARCHAR(9) NOT NULL,\n" +
+                "  `short_station_id` VARCHAR(5) NOT NULL,\n" +
                 "  `longitude_1` VARCHAR(2) NOT NULL,\n" +
                 "  `longitude_2` VARCHAR(2) NOT NULL,\n" +
                 "  `latitude_1` VARCHAR(2) NOT NULL,\n" +
