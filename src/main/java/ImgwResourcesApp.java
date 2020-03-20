@@ -1,6 +1,4 @@
 import dao.ClimaticRecordDao;
-import dao.CoordinatesDao;
-import dao.StationDao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,10 +13,15 @@ public class ImgwResourcesApp {
 
 //            CoordinatesDao cd = new CoordinatesDao();
 //            cd.readToDatabase(con);
+
+
 //            StationDao sd = new StationDao();
-//            ClimaticRecordDao crd = new ClimaticRecordDao();
+//            sd.readToDatabase(con);
+
+
+            ClimaticRecordDao crd = new ClimaticRecordDao();
 //            crd.pullData();
-//            crd.readToDatabase(con);
+            crd.readToDatabase(con);
 
             con.close();
         } catch (Exception e) {

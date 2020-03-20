@@ -27,6 +27,61 @@ public class ClimaticRecordDao {
 
     private final String ENCODING = "windows-1250";
 
+    public boolean readToDatabase(Connection con) throws SQLException {
+
+
+        Set<ClimaticRecordBean> crbSet = new TreeSet<>();
+        try (Stream<Path> walk = Files.walk(Paths.get("output/"))) {
+            walk
+                    .filter(b -> b.toString().length()>11 && b.toString().charAt(11)!='t')
+                    .forEach(a -> {
+                        InputStream is = null;
+                        try {
+                            is = new FileInputStream(a.toFile());
+                            crbSet.addAll(readFromCSV(is));
+                            is.close();
+                            for (ClimaticRecordBean record : crbSet) {
+                                String preparedQuery = "INSERT INTO `imgw_db`.`t_climatic_records` (station_id, station_name, year, month, day," +
+                                        " max_tmp, max_tmp_status, min_tmp, min_tmp_status, avg_tmp, avg_tmp_status, min_ground_tmp, min_ground_tmp_status," +
+                                        " total_precipitation, total_precipitation_status, precipitation_kind, snow_layer_height, snow_layer_height_status\n)"
+                                        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                PreparedStatement preparedStmt = con.prepareStatement(preparedQuery);
+                                preparedStmt.setString(1, record.getId());
+                                preparedStmt.setString(2, record.getName());
+                                preparedStmt.setString(3, record.getYear());
+                                preparedStmt.setString(4, record.getMonth());
+                                preparedStmt.setString(5, record.getDay());
+                                preparedStmt.setString(6, record.getTmpMax());
+                                preparedStmt.setString(7, record.getTmpMaxStatus());
+                                preparedStmt.setString(8, record.getTmpMin());
+                                preparedStmt.setString(9, record.getTmpMinStatus());
+                                preparedStmt.setString(10, record.getTmpAvg());
+                                preparedStmt.setString(11, record.getTmpAvgStatus());
+                                preparedStmt.setString(12, record.getTmpOfGroundMin());
+                                preparedStmt.setString(13, record.getTmpOfGroundMinStatus());
+                                preparedStmt.setString(14, record.getTotalPrecipitation());
+                                preparedStmt.setString(15, record.getTotalPrecipitationStatus());
+                                preparedStmt.setString(16, record.getKindOfPrecipitation());
+                                preparedStmt.setString(17, record.getSnowLayerHeight());
+                                preparedStmt.setString(18, record.getSnowLayerHeightStatus());
+                                preparedStmt.execute();
+                            }
+
+                            Files.delete(a);
+                            crbSet.removeAll(crbSet);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
     public List<ClimaticRecordBean> readFromCSV(InputStream is) throws Exception {
 
         Reader reader = new BufferedReader(
@@ -86,43 +141,43 @@ public class ClimaticRecordDao {
         return null;
     }
 
-    public boolean readToDatabase(Connection con) throws Exception {
-
-        //make sure we read data to appriopriate table, without previous content
-        createNewTable(con);
-
-        ClimaticRecordDao crd = new ClimaticRecordDao();
-        Set<ClimaticRecordBean> stationBeans = crd.readData();
-
-        for (ClimaticRecordBean record : stationBeans) {
-            String preparedQuery = "INSERT INTO `imgw_db`.`t_climatic_records` (station_id, station_name, year, month, day," +
-                    " max_tmp, max_tmp_status, min_tmp, min_tmp_status, avg_tmp, avg_tmp_status, min_ground_tmp, min_ground_tmp_status," +
-                    " total_precipitation, total_precipitation_status, precipitation_kind, snow_layer_height, snow_layer_height_status\n)"
-                    + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement preparedStmt = con.prepareStatement(preparedQuery);
-            preparedStmt.setString(1, record.getId());
-            preparedStmt.setString(2, record.getName());
-            preparedStmt.setString(3, record.getYear());
-            preparedStmt.setString(4, record.getMonth());
-            preparedStmt.setString(5, record.getDay());
-            preparedStmt.setString(6, record.getTmpMax());
-            preparedStmt.setString(7, record.getTmpMaxStatus());
-            preparedStmt.setString(8, record.getTmpMin());
-            preparedStmt.setString(9, record.getTmpMinStatus());
-            preparedStmt.setString(10, record.getTmpAvg());
-            preparedStmt.setString(11, record.getTmpAvgStatus());
-            preparedStmt.setString(12, record.getTmpOfGroundMin());
-            preparedStmt.setString(13, record.getTmpOfGroundMinStatus());
-            preparedStmt.setString(14, record.getTotalPrecipitation());
-            preparedStmt.setString(15, record.getTotalPrecipitationStatus());
-            preparedStmt.setString(16, record.getKindOfPrecipitation());
-            preparedStmt.setString(17, record.getSnowLayerHeight());
-            preparedStmt.setString(18, record.getSnowLayerHeightStatus());
-            preparedStmt.execute();
-        }
-
-        return true;
-    }
+//    public boolean readToDatabase(Connection con) throws Exception {
+//
+//        //make sure we read data to appriopriate table, without previous content
+//        createNewTable(con);
+//
+//        ClimaticRecordDao crd = new ClimaticRecordDao();
+//        Set<ClimaticRecordBean> stationBeans = crd.readData();
+//
+//        for (ClimaticRecordBean record : stationBeans) {
+//            String preparedQuery = "INSERT INTO `imgw_db`.`t_climatic_records` (station_id, station_name, year, month, day," +
+//                    " max_tmp, max_tmp_status, min_tmp, min_tmp_status, avg_tmp, avg_tmp_status, min_ground_tmp, min_ground_tmp_status," +
+//                    " total_precipitation, total_precipitation_status, precipitation_kind, snow_layer_height, snow_layer_height_status\n)"
+//                    + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//            PreparedStatement preparedStmt = con.prepareStatement(preparedQuery);
+//            preparedStmt.setString(1, record.getId());
+//            preparedStmt.setString(2, record.getName());
+//            preparedStmt.setString(3, record.getYear());
+//            preparedStmt.setString(4, record.getMonth());
+//            preparedStmt.setString(5, record.getDay());
+//            preparedStmt.setString(6, record.getTmpMax());
+//            preparedStmt.setString(7, record.getTmpMaxStatus());
+//            preparedStmt.setString(8, record.getTmpMin());
+//            preparedStmt.setString(9, record.getTmpMinStatus());
+//            preparedStmt.setString(10, record.getTmpAvg());
+//            preparedStmt.setString(11, record.getTmpAvgStatus());
+//            preparedStmt.setString(12, record.getTmpOfGroundMin());
+//            preparedStmt.setString(13, record.getTmpOfGroundMinStatus());
+//            preparedStmt.setString(14, record.getTotalPrecipitation());
+//            preparedStmt.setString(15, record.getTotalPrecipitationStatus());
+//            preparedStmt.setString(16, record.getKindOfPrecipitation());
+//            preparedStmt.setString(17, record.getSnowLayerHeight());
+//            preparedStmt.setString(18, record.getSnowLayerHeightStatus());
+//            preparedStmt.execute();
+//        }
+//
+//        return true;
+//    }
 
     public void createNewTable(Connection con) throws SQLException {
 

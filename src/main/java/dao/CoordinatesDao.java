@@ -24,7 +24,7 @@ public class CoordinatesDao {
 
         List<CoordinatesBean> beans = new CsvToBeanBuilder<CoordinatesBean>(reader)
                 .withType(CoordinatesBean.class)
-                .withIgnoreQuotations(true)
+                .withIgnoreQuotations(false)
                 .build().parse();
 
         Set<CoordinatesBean> uniqueBeans = new TreeSet<>();
@@ -46,13 +46,12 @@ public class CoordinatesDao {
                     + " values (?, ?, ?, ?, ?)";
             PreparedStatement preparedStmt = con.prepareStatement(preparedQuery);
             preparedStmt.setString(1, coordinate.getShortStationId());
-            preparedStmt.setString(2, coordinate.getLongitude1());
-            preparedStmt.setString(3, coordinate.getLongitude2());
-            preparedStmt.setString(4, coordinate.getLatitude1());
-            preparedStmt.setString(5, coordinate.getLatitude2());
+            preparedStmt.setInt(2, coordinate.getLongitudeDeg());
+            preparedStmt.setInt(3, coordinate.getLongitudeMin());
+            preparedStmt.setInt(4, coordinate.getLatitudeDeg());
+            preparedStmt.setInt(5, coordinate.getLatitudeMin());
             preparedStmt.execute();
         }
-
         is.close();
         return true;
     }
@@ -66,10 +65,10 @@ public class CoordinatesDao {
         stmt = con.createStatement();
         query = "   CREATE TABLE `imgw_db`.`t_coordinates` (\n" +
                 "  `short_station_id` VARCHAR(5) NOT NULL,\n" +
-                "  `longitude_1` VARCHAR(2) NOT NULL,\n" +
-                "  `longitude_2` VARCHAR(2) NOT NULL,\n" +
-                "  `latitude_1` VARCHAR(2) NOT NULL,\n" +
-                "  `latitude_2` VARCHAR(2) NOT NULL,\n" +
+                "  `longitude_1` INT(2) NOT NULL,\n" +
+                "  `longitude_2` INT(2) NOT NULL,\n" +
+                "  `latitude_1` INT(2) NOT NULL,\n" +
+                "  `latitude_2` INT(2) NOT NULL,\n" +
                 "            PRIMARY KEY (`short_station_id`),\n" +
                 "            UNIQUE INDEX `coordinate_UNIQUE` (`short_station_id` ASC) VISIBLE)";
         stmt.executeUpdate(query);

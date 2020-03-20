@@ -36,6 +36,9 @@ public class StationBean implements Comparable<StationBean>{
 
     @Override
     public int compareTo(StationBean o) {
-        return this.getName().compareTo(o.getName());
+        String thisObject = this.getName()+this.getId();
+        String otherObject = o.getName()+o.getId();
+
+        return thisObject.compareTo(otherObject);
     }
 }

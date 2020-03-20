@@ -6,12 +6,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -21,45 +16,46 @@ import static org.junit.Assert.assertEquals;
 
 public class ClimaticRecordDaoTest {
 
-    @Test
-    public void testsReadToDatabase() throws IOException {
-
-        //given
-
-        TestHelper th = new TestHelper();
-
-        try {
-            ClimaticRecordDao crd = new ClimaticRecordDao();
-
-            Connection con = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/imgw_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true", "root", "Mandok01");
-
-
-            //when
-            th.unzipExampleRecords();
-            crd.readToDatabase(con);
-
-            Statement stmt = con.createStatement();
-            String query = "SELECT * FROM t_climatic_records";
-
-            String result = "";
-
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                result += rs.getString(1) + " : " + rs.getString(2) + "\n";
-            }
-
-            //then
-            assertEquals(th.txtToString("txt/climatic-records-mysql-to-beans-test.txt"), result);
-
-            con.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        FileUtils.cleanDirectory(new File("output/"));
-
-    }
+    //this method is necessary only when creating t_climatic_records table in database - otherwise it shouldn't be used
+//    @Test
+//    public void testsReadToDatabase() throws IOException {
+//
+//        //given
+//
+//        TestHelper th = new TestHelper();
+//
+//        try {
+//            ClimaticRecordDao crd = new ClimaticRecordDao();
+//
+//            Connection con = DriverManager.getConnection(
+//                    "jdbc:mysql://localhost:3306/imgw_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true", "root", "Mandok01");
+//
+//
+//            //when
+//            th.unzipExampleRecords();
+//            crd.readToDatabase(con);
+//
+//            Statement stmt = con.createStatement();
+//            String query = "SELECT * FROM t_climatic_records";
+//
+//            String result = "";
+//
+//            ResultSet rs = stmt.executeQuery(query);
+//            while (rs.next()) {
+//                result += rs.getString(1) + " : " + rs.getString(2) + "\n";
+//            }
+//
+//            //then
+//            assertEquals(th.txtToString("txt/climatic-records-mysql-to-beans-test.txt"), result);
+//
+//            con.close();
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+//
+//        FileUtils.cleanDirectory(new File("output/"));
+//
+//    }
 
 
     @Test
