@@ -209,6 +209,7 @@ public class ClimaticRecordDao {
                 "  `snow_layer_height_status` VARCHAR(1) NOT NULL,\n" +
                 "            PRIMARY KEY (`station_id`, `year`, `month`, `day`),\n" +
                 "            UNIQUE INDEX `climatic_record_UNIQUE` (`station_id`, `year`, `month`, `day` ASC) VISIBLE)";
+
         stmt.executeUpdate(query);
 
     }
