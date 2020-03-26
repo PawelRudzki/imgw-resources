@@ -42,7 +42,7 @@ public class CoordinatesDao {
         Set<CoordinatesBean> coordinatesBeans = cd.readFromCSV(is);
 
         for (CoordinatesBean coordinate : coordinatesBeans) {
-            String preparedQuery = "insert into `imgw_db`.`t_coordinates` (short_station_id, longitude_1, longitude_2, latitude_1, latitude_2)"
+            String preparedQuery = "insert into `imgw_db`.`t_coordinates` (short_station_id, longitude_degrees, longitude_minutes, latitude_degrees, latitude_minutes)"
                     + " values (?, ?, ?, ?, ?)";
             PreparedStatement preparedStmt = con.prepareStatement(preparedQuery);
             preparedStmt.setString(1, coordinate.getShortStationId());
@@ -65,10 +65,10 @@ public class CoordinatesDao {
         stmt = con.createStatement();
         query = "   CREATE TABLE `imgw_db`.`t_coordinates` (\n" +
                 "  `short_station_id` VARCHAR(5) NOT NULL,\n" +
-                "  `longitude_1` INT(2) NOT NULL,\n" +
-                "  `longitude_2` INT(2) NOT NULL,\n" +
-                "  `latitude_1` INT(2) NOT NULL,\n" +
-                "  `latitude_2` INT(2) NOT NULL,\n" +
+                "  `longitude_degrees` INT(2) NOT NULL,\n" +
+                "  `longitude_minutes` INT(2) NOT NULL,\n" +
+                "  `latitude_degrees` INT(2) NOT NULL,\n" +
+                "  `latitude_minutes` INT(2) NOT NULL,\n" +
                 "            PRIMARY KEY (`short_station_id`),\n" +
                 "            UNIQUE INDEX `coordinate_UNIQUE` (`short_station_id` ASC) VISIBLE)";
         stmt.executeUpdate(query);

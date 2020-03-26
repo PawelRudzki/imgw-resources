@@ -53,7 +53,7 @@ public class CoordinatesUtilsTest {
                    coord2.getLatitudeDeg(), coord2.getLatitudeMin(), coord2.getLongitudeDeg(), coord2.getLongitudeMin());
 
             //then
-            assertEquals(261.72, distance, 0.1);
+            assertEquals(270.6, distance, 0.1);
 
             con.close();
         } catch (Exception e) {
