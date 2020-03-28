@@ -1,5 +1,9 @@
 package utils;
 
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
+
 public class CoordinatesUtils {
 
     public double distanceBetweenPoints(int lat1deg, int lat1min, int long1deg, int long1min,
@@ -16,6 +20,30 @@ public class CoordinatesUtils {
         double b = latitude2 - latitude1;
         return Math.sqrt(a * a + b * b) * Math.PI * earthDiameter / 360;
         //result in kilometers
+    }
+
+    public Map<Integer, Double> distanceBetweenPointsDBFunction(Connection con, int numberOfStations, double searchRadius, int latitude_degrees, int latitude_minutes, int longitude_degrees, int longitude_minutes) throws SQLException {
+
+        String preparedQuery =
+                "SELECT * FROM"+
+                        " (SELECT `short_station_id`,imgw_db.`distance`(`t_coordinates`.`latitude_degrees`, `t_coordinates`.`latitude_minutes`, `t_coordinates`.`longitude_degrees`, `t_coordinates`.`longitude_minutes`, ?, ?, ?, ?) AS `distance` FROM `t_coordinates`) AS `distances` WHERE `distance` < ? ORDER BY distance LIMIT ?";
+
+        PreparedStatement preparedStmt = con.prepareStatement(preparedQuery);
+        preparedStmt.setInt(1, latitude_degrees);
+        preparedStmt.setInt(2, latitude_minutes);
+        preparedStmt.setInt(3, longitude_degrees);
+        preparedStmt.setInt(4, longitude_minutes);
+        preparedStmt.setDouble(5, searchRadius);
+        preparedStmt.setInt(6, numberOfStations);
+
+        ResultSet rs = preparedStmt.executeQuery();
+
+        HashMap<Integer, Double> resultMap = new HashMap<>();
+        while (rs.next()) {
+            resultMap.put(rs.getInt(1), rs.getDouble(2));
+        }
+
+        return resultMap;
     }
 }
 

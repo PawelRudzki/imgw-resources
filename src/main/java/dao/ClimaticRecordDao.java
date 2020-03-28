@@ -134,7 +134,7 @@ public class ClimaticRecordDao implements RecordDao{
                                 String preparedQuery = "INSERT INTO `imgw_db`.`t_climatic_records` (station_id, station_name, year, month, day," +
                                         " max_tmp, max_tmp_status, min_tmp, min_tmp_status, avg_tmp, avg_tmp_status, min_ground_tmp, min_ground_tmp_status," +
                                         " total_precipitation, total_precipitation_status, precipitation_kind, snow_layer_height, snow_layer_height_status\n)"
-                                        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                                 PreparedStatement preparedStmt = con.prepareStatement(preparedQuery);
                                 preparedStmt.setString(1, record.getId());
                                 preparedStmt.setString(2, record.getName());

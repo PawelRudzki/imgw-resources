@@ -3,12 +3,10 @@ package utils;
 import beans.CoordinatesBean;
 import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -49,8 +47,8 @@ public class CoordinatesUtilsTest {
             double distance = 0.0;
 
             distance = cu.distanceBetweenPoints(
-                   coord1.getLatitudeDeg(), coord1.getLatitudeMin(), coord1.getLongitudeDeg(), coord1.getLongitudeMin(),
-                   coord2.getLatitudeDeg(), coord2.getLatitudeMin(), coord2.getLongitudeDeg(), coord2.getLongitudeMin());
+                    coord1.getLatitudeDeg(), coord1.getLatitudeMin(), coord1.getLongitudeDeg(), coord1.getLongitudeMin(),
+                    coord2.getLatitudeDeg(), coord2.getLatitudeMin(), coord2.getLongitudeDeg(), coord2.getLongitudeMin());
 
             //then
             assertEquals(270.6, distance, 0.1);
@@ -58,6 +56,31 @@ public class CoordinatesUtilsTest {
             con.close();
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+
+    @Test
+    public void testsdistanceBetweenPointsDBFunction() {
+
+        //given
+        CoordinatesUtils cu = new CoordinatesUtils();
+
+
+        //when
+
+        try {
+            Connection con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/imgw_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8&allowPublicKeyRetrieval=true", "root", "Mandok01");
+
+
+            Map<Integer, Double> resultMap = cu.distanceBetweenPointsDBFunction(con, 3, 100, 54, 13, 19, 32 );
+
+            //then
+            assertEquals("{160=0.0, 1505=19.325045964406772, 1502=11.131949079327514}", resultMap.toString());
+
+            con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
